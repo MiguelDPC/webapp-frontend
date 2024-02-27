@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  <title> Search User Page </title>
+  <style>
+    .flex-parent {
+        display: flex;
+    }
+    .flex-child {
+        flex: 1;
+    }
+    table {
+        border-spacing: 20px;
+    }
+  </style>
+  </head>
+  <%- include("header.ejs") %>
+  <body>
+    <h1> You may search for users using any of the following parameters </h1>
+    <form action="/searchforusers" method="POST">
+      <label for="firstname">First Name: </label>
+      <input type="text" id="firstname" name="firstname"><br><br>
+      <label for="lastname">Last Name: </label>
+      <input type="text" id="lastname" name="lastname"><br><br>
+      <label for="email">Email: </label>
+      <input type="text" id="email" name="email"><br><br>
+      <label for="building">Building: </label>
+      <input type="text" id="building" name="building"><br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <h2> Search Output </h2>
+    
+    <div class='parent flex-parent'> 
+      <div class='child flex-child'> 
+        <form action="deleteuser" method="POST">
+          <label for="usertodelete">Enter User ID to Delete:</label>
+          <input type="text" id="usertodelete" name="usertodelete" required><br><br>
+          <button type="submit">DELETE</button>
+        </form>
+      </div>    
+      <div class='child flex-child'>
+        <form action="edituser" method="POST">
+          <label for="usertoedit">Enter User to Edit:</label>
+          <input type="text" id="usertoedit" name="usertoedit" required><br><br>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    <% if(data.list == "500"){ %> 
+      No User Found
+    <% } else { %>
+    <table>
+        <tr>
+          <th> ID </th>
+          <th> First Name </th>
+          <th> Last Name </th>
+          <th> Email </th>
+          <th> Phone </th>
+          <th> Address </th>
+          <th> City </th>
+          <th> State </th>
+          <th> Zip </th>
+          <th> Notes </th>
+          <th> Title </th>
+          <th> Role </th>
+          <th> Building </th>
+        </tr>
+        <% if(data.role != "secretary"){ %>
+          <% for (var i = 0; i < data.list.length; i++){ %>
+            <tr>
+              <td> <%=data.list[i]["id"]%> </td>
+              <td> <%=data.list[i]["firstname"]%> </td>
+              <td> <%=data.list[i]["lastname"]%> </td>
+              <td> <%=data.list[i]["email"]%> </td>
+              <td> <%=data.list[i]["phone"]%> </td>
+              <td> <%=data.list[i]["address"]%> </td>
+              <td> <%=data.list[i]["city"]%> </td>
+              <td> <%=data.list[i]["state"]%> </td>
+              <td> <%=data.list[i]["zip"]%> </td>
+              <td> <%=data.list[i]["notes"]%> </td>
+              <td> <%=data.list[i]["title"]%> </td>
+              <td> <%=data.list[i]["role"]%> </td>
+              <td> <%=data.list[i]["building"]%> </td>
+            </tr>
+          <% } %>
+        <% } else { %>
+          <% for (var i = 0; i <data.list.length; i++){ %>
+            <li> <%=data.list[i]["firstname"]%>
+            <%=data.list[i]["lastname"]%> 
+            <%=data.list[i]["email"]%> 
+            <%=data.list[i]["phone"]%>
+            </li>
+          <% } %>
+        <% } %>
+    </table>
+    <% } %>
+  </body>
+</html>
+
+
+      

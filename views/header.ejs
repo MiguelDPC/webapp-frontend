@@ -1,0 +1,20 @@
+<nav>
+  <h1> Welcome <%= data.user %> </h1>
+  <h2>  <%= data.role %> Dashboard </h2>
+  
+  <form action="/createuserpage" method="POST">
+    <button type="submit">Create User Page</button>
+  </form>
+
+  <form action="/dbeditor" method="POST">
+    <button type="submit">Database Handler</button>
+  </form>
+
+  <form action="/searchuserpage" method="POST">
+    <button type="submit">Search For Users</button>
+  </form>
+
+  <form action="/logout" method="POST">
+    <button type="submit">Logout</button>
+  </form>
+</nav>
