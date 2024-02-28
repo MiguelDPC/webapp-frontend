@@ -1,0 +1,41 @@
+<html>
+<head>
+<link href="/css/style.css" rel="stylesheet" type="text/css"> 
+</head>
+<header>
+    <div class="Head">
+     <h2> Welcome <%= data.user %> </h2>
+    <h3>  <%= data.role %> Dashboard </h3>
+    </div>
+  <nav>
+      <div class="container">
+        <ul>
+
+            <li>
+            <form action="/home" method="POST">
+              <button type="submit">Home Page</button>
+            </form>
+            </li>
+
+            <li>
+            <form action="/createuserpage" method="POST">
+              <button type="submit">Create User Page</button>
+            </form>
+            </li>
+      
+            <li>
+            <form action="/searchuserpage" method="POST">
+              <button type="submit">Search For Users</button>
+            </form>
+            </li>
+
+            <li>
+            <form action="/logout" method="POST">
+              <button type="submit">Logout</button>
+            </form>
+            </li>
+        </ul>
+      </div>
+    </header>
+  </nav>
+<html>
