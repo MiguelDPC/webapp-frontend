@@ -123,6 +123,36 @@ async function searchforusers(firstname, lastname, email, building){
   return response.json()
 }
 
+async function deleteuser(UserID){
+
+  const response = await fetch('http://localhost:4000/deleteuser', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({UserID:UserID})
+  })
+  return response.json()
+}
+
+async function edituser(UserID, field, data){
+  const response = await fetch('http://localhost:4000/edituser', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({UserID:UserID, field:field, data:data})
+  })
+  return response.json()
+
+}
+
 module.exports.CreateUser = CreateUser;
 module.exports.login = Login;
 module.exports.authenticated = authenticated;
@@ -130,3 +160,5 @@ module.exports.getSessionID = getSessionID;
 module.exports.endsession = endsession;
 module.exports.createtable = createtable;
 module.exports.searchforusers = searchforusers;
+module.exports.deleteuser = deleteuser;
+module.exports.edituser = edituser;

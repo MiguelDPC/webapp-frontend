@@ -5,7 +5,9 @@
 </head>
 <%- include("header.ejs") %>
 <body>
-    <h2> CreateUser </h2>
+    <h1> Create User </h1>
+    <div class="parent flex-parent">
+    <div class="child flex-child">
     <form action="/admin/createUser" method="POST">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required><br><br>
@@ -18,9 +20,11 @@
       <label for="lastname">Last Name:</label>
       <input type="text" id="lastname" name="lastname" required><br><br>
       <label for="phone">Phone Number:</label>
-      <input type="text" id="phone" name="phone"><br><br>
+      <input type="text" id="phone" name="phone" required><br><br>
       <label for="address">Address:</label>
       <input type="text" id="address" name="address"><br><br>
+    </div>
+    <div class="child flex-child">
       <label for="city">City:</label>
       <input type="text" id="city" name="city"><br><br>
       <label for="state">State:</label>
@@ -36,6 +40,8 @@
       <label for="building">Building:</label>
       <input type="text" id="building" name="building" required><br><br>
       <button type="submit">Submit</button>
+    </div>
+  </div>
     </form>
     <h2> <%= data.message %> </h2>
 </body>

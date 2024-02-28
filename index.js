@@ -6,8 +6,8 @@ const script = require('./public/script.js');
 const https = require('https')
 const fs = require('fs')
 
-const key = fs.readFileSync('../webapp-backend/certificate/selfsigned.key')
-const cert = fs.readFileSync('../webapp-backend/certificate/sefsigned.crt')
+const key = fs.readFileSync('../webapp-frontend/certificate/selfsigned.key')
+const cert = fs.readFileSync('../webapp-frontend/certificate/sefsigned.crt')
 
 console.log(key)
 const options = {
@@ -21,11 +21,12 @@ let currentUser = {
   role: "user",
   user: null,
   auth: false,
-  list: info = new Array()
+  list: info = new Array(),
+  building: null
 };
 
 app.set('view engine', 'ejs');
-app.use("/public/", express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 app.use(express.json())
 app.use(express.urlencoded({extended: 'false'}))
 
@@ -44,10 +45,17 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.post("/home", async (req, res) => {
+  if(!currentUser.auth){ res.redirect('/')}
+  
+  res.render("home", {data: {user:currentUser.user, role:currentUser.role}});
+})
+
 app.post("/logout", async (req, res) => {
   currentUser.auth = false,
   currentUser.user = null,
   currentUser.role = "user"
+  currentUser.list = new Array()
   const data = await script.endsession();
   res.redirect('/')
 })
@@ -62,6 +70,7 @@ app.post("/admin/createUser", async (req, res) => {
   }
 })
 
+//Old command for setting up db 
 app.post("/createtable", async (req, res) => {
 
   const {building} = req.body
@@ -75,8 +84,9 @@ app.post("/searchforusers", async (req, res) => {
 
   const {firstname, lastname, email, building} = req.body
   const data = await script.searchforusers(firstname, lastname, email, building)
+
   if (data.status != '500'){
-    res.render("searchpage", {data:{user:currentUser.user, role:currentUser.role, list:data.message}})
+    res.render("searchpage", {data:{user:currentUser.user, role:currentUser.role, list:data.message, building:currentUser.building}})
   } else {
     console.log(data.status)
     res.render("searchpage", {data:{user:currentUser.user, role:currentUser.role, list:data.status}})
@@ -87,8 +97,24 @@ app.post("/searchforusers", async (req, res) => {
 app.post("/deleteuser", async (req, res) => {
   if(!currentUser.auth){ res.redirect('/')}
 
-  console.log(req.body)
+  const UserID = req.body.usertodelete;
+  const data = await script.deleteuser(UserID) 
+  currentUser.list = new Array();
+  console.log(data)
+  res.render("searchpage", {data:{user:currentUser.user, role:currentUser.role, list:currentUser.list, deleteresult:data.message}})
+})
 
+app.post("/edituser", async (req, res) => {
+  if(!currentUser.auth){ res.redirect('/')}
+
+  const UserID = req.body.usertoedit;
+  const field = req.body.field;
+  const data = req.body.data;
+
+  currentUser.list = new Array();
+  const response = await script.edituser(UserID, field, data);
+  console.log(response)
+  res.render("searchpage", {data:{user:currentUser.user, role:currentUser.role, list:currentUser.list, editresult:response.message}})
 })
 
 app.post("/auth/login", async (req, res) => {
@@ -102,6 +128,7 @@ app.post("/auth/login", async (req, res) => {
     currentUser.role = data.role;
     currentUser.user = username;
     currentUser.auth = data.message;
+    currentUser.building = data.building;
   }
 
   if(data.message){
@@ -137,7 +164,6 @@ app.post("/searchuserpage", async(req, res) => {
 })
 
 const server = https.createServer(options, app)
-
 server.listen(port, () => {
  console.log('Sever hosted at http://localhost:' + port); 
 });

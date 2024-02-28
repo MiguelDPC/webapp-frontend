@@ -1,52 +1,78 @@
 <!DOCTYPE html>
-
 <html>
   <head>
+    <link href="/css/style.css.css" rel="stylesheet" type="text/css"> 
   <title> Search User Page </title>
-  <style>
-    .flex-parent {
-        display: flex;
-    }
-    .flex-child {
-        flex: 1;
-    }
-    table {
-        border-spacing: 20px;
-    }
-  </style>
-  </head>
   <%- include("header.ejs") %>
+  </head>
   <body>
     <h1> You may search for users using any of the following parameters </h1>
     <form action="/searchforusers" method="POST">
+      <div class='parent flex-parent'>
+      <div class='child flex-child'>
       <label for="firstname">First Name: </label>
       <input type="text" id="firstname" name="firstname"><br><br>
       <label for="lastname">Last Name: </label>
       <input type="text" id="lastname" name="lastname"><br><br>
+      </div>
+      <div class='child flex-child'>
       <label for="email">Email: </label>
       <input type="text" id="email" name="email"><br><br>
+      <% if(data.role != "secretary") {%>
       <label for="building">Building: </label>
       <input type="text" id="building" name="building"><br><br>
       <button type="submit">Submit</button>
+      <% } %>
+      </div>
+      </div>
     </form>
-    <h2> Search Output </h2>
+
+    <h1> Search Output </h1>
     
+    <% if(data.role != "secretary") {%>
     <div class='parent flex-parent'> 
       <div class='child flex-child'> 
         <form action="deleteuser" method="POST">
           <label for="usertodelete">Enter User ID to Delete:</label>
           <input type="text" id="usertodelete" name="usertodelete" required><br><br>
           <button type="submit">DELETE</button>
+          <p> <%= data.deleteresult %> </p>
         </form>
       </div>    
       <div class='child flex-child'>
         <form action="edituser" method="POST">
-          <label for="usertoedit">Enter User to Edit:</label>
-          <input type="text" id="usertoedit" name="usertoedit" required><br><br>
+          <label for="usertoedit">Enter User ID to Edit:</label>
+          <input type="text" id="usertoedit" name="usertoedit"required><br>
+          <p> Select What Field to Edit:</p>
+          <input type="radio" id="firstname" name="field" value="firstname" required>
+          <label for="firstnam">First Name</label>
+          <input type="radio" id="lastname" name="field" value="lastname" required>
+          <label for="lastname">Last Name</label>
+          <input type="radio" id="Email" name="field" value="email" required>
+          <label for="Email">Email</label>
+          <input type="radio" id="Phone" name="field" value="phone" required>
+          <label for="Phone">Phone</label>
+          <input type="radio" id="Address" name="field" value="address" required>
+          <label for="Address">Address</label><br><br>
+          <input type="radio" id="City" name="field" value="city" required>
+          <label for="City">City</label>
+          <input type="radio" id="Notes" name="field" value="notes" required>
+          <label for="Notes">Notes</label>
+          <input type="radio" id="Title" name="field" value="title" required>
+          <label for="Title">Title</label>
+          <input type="radio" id="Role" name="field" value="role" required>
+          <label for="Role">Role</label>
+          <input type="radio" id="Building" name="field" value="building" required>
+          <label for="Building">Building</label><br><br>
+
+          <label for="data"> Enter Data to Replace With </label>
+          <input type="text" id="data" name="data" required><br><br>
           <button type="submit">Submit</button>
         </form>
+          <p> <%= data.editresult %></p>
       </div>
     </div>
+    <% } %>
     <% if(data.list == "500"){ %> 
       No User Found
     <% } else { %>
@@ -57,6 +83,7 @@
           <th> Last Name </th>
           <th> Email </th>
           <th> Phone </th>
+          <% if(data.role != "secretary") { %>
           <th> Address </th>
           <th> City </th>
           <th> State </th>
@@ -65,6 +92,7 @@
           <th> Title </th>
           <th> Role </th>
           <th> Building </th>
+          <% } %>
         </tr>
         <% if(data.role != "secretary"){ %>
           <% for (var i = 0; i < data.list.length; i++){ %>
@@ -85,12 +113,17 @@
             </tr>
           <% } %>
         <% } else { %>
-          <% for (var i = 0; i <data.list.length; i++){ %>
-            <li> <%=data.list[i]["firstname"]%>
-            <%=data.list[i]["lastname"]%> 
-            <%=data.list[i]["email"]%> 
-            <%=data.list[i]["phone"]%>
-            </li>
+          <% for (var i = 0; i < data.list.length; i++){ %>
+            <% console.log(data) %>
+            <% if(data.list[i]["building"] == data.building) { %>
+            <tr>
+              <td> <%=data.list[i]["id"]%> </td>
+              <td> <%=data.list[i]["firstname"]%> </td>
+              <td> <%=data.list[i]["lastname"]%> </td>
+              <td> <%=data.list[i]["email"]%> </td>
+              <td> <%=data.list[i]["phone"]%> </td>
+            </tr>
+            <% } %>
           <% } %>
         <% } %>
     </table>
